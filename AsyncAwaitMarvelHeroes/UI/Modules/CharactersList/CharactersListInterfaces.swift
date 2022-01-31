@@ -20,8 +20,8 @@ protocol CharactersListViewInterface: ViewInterface {
 }
 
 protocol CharactersListPresenterInterface: PresenterInterface {
-    func search(for searchTerm: String?)
-    func loadNextPage()
+    func search(for searchTerm: String?) async
+    func loadNextPage() async
     func didSelect(character: CharacterData)
 }
 

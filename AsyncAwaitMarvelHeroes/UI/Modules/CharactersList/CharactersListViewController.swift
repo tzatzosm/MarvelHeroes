@@ -92,7 +92,9 @@ final class CharactersListViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-        presenter.search(for: nil)
+        Task.detached {
+            await self.presenter.search(for: nil)
+        }
     }
 
 }
@@ -102,7 +104,9 @@ final class CharactersListViewController: UICollectionViewController {
 extension CharactersListViewController {
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if case .loadingNextPage = dataSource?.itemIdentifier(for: indexPath) {
-            presenter.loadNextPage()
+            Task.detached {
+                await self.presenter.loadNextPage()
+            }
         }
     }
 
@@ -149,11 +153,15 @@ private extension CharactersListViewController {
 
 extension CharactersListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        presenter.search(for: searchBar.text)
+        Task.detached {
+            await self.presenter.search(for: searchBar.text)
+        }
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        presenter.search(for: nil)
+        Task.detached {
+            await self.presenter.search(for: nil)
+        }
     }
 }
 

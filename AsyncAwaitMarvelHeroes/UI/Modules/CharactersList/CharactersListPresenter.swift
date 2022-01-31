@@ -39,22 +39,20 @@ final class CharactersListPresenter {
 // MARK: - Extensions -
 
 extension CharactersListPresenter: CharactersListPresenterInterface {
-    func search(for searchTerm: String?) {
-        Task.detached {
-            self.searchTerm = searchTerm
-            self.resetState()
-            await self.view.showResults(sections: self.constructSections())
-            await self.performSearch()
-        }
+    func search(for searchTerm: String?) async {
+        self.searchTerm = searchTerm
+        self.resetState()
+        await self.view.showResults(sections: self.constructSections())
+        await self.performSearch()
     }
 
-    func loadNextPage() {
+    func loadNextPage() async {
         if isLoading {
+            print("isLoading")
             return
         }
-        Task.detached {
-            await self.performSearch()
-        }
+        await self.performSearch()
+        print("performedSearch")
     }
 
     func didSelect(character: CharacterData) {
