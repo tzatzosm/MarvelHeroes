@@ -8,11 +8,11 @@
 import Foundation
 import Alamofire
 
-protocol AnyMarvelService {
+protocol MarvelServiceInterface {
     func getCharacters(nameStartsWith: String?, order: String, offset: Int, limit: Int) async throws -> CharactersResponse
 }
 
-class MarvelService: AnyMarvelService {
+class MarvelService: MarvelServiceInterface {
     private let configuration = URLSessionConfiguration.default
     private let session: Alamofire.Session
 
