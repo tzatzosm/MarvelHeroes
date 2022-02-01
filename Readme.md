@@ -1,5 +1,7 @@
 # Marvel Heroes
 
+[Gif showcasing UI here](/External/Readme.md)
+
 ## Sample application exploring Swift Concurrency
 
 ### Running the project
