@@ -10,6 +10,7 @@ import Alamofire
 
 protocol MarvelServiceInterface {
     func getCharacters(nameStartsWith: String?, order: String, offset: Int, limit: Int) async throws -> CharactersResponse
+    func getComics(for characterIds: [Int]) async throws -> ComicsResponse
 }
 
 class MarvelService: MarvelServiceInterface {
@@ -31,5 +32,10 @@ class MarvelService: MarvelServiceInterface {
             limit: limit
         )
         return try await session.request(request).serializingDecodable(CharactersResponse.self).value
+    }
+
+    func getComics(for characterIds: [Int]) async throws -> ComicsResponse {
+        let request = MarvelAPIServiceRouter.comics(characterIds: characterIds)
+        return try await session.request(request).serializingDecodable(ComicsResponse.self).value
     }
 }

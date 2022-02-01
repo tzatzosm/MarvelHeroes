@@ -1,26 +1,23 @@
 //
-//  HerosResponse.swift
+//  ComicsResponse.swift
 //  AsyncAwaitMarvelHeroes
 //
-//  Created by Marsel Tzatzos on 31/01/2022.
+//  Created by Marsel Tzatzos on 01/02/2022.
+//  Copyright © 2022 QQ. All rights reserved.
 //
 
 import Foundation
 
-import Foundation
+// MARK: - ComicsResponse -
 
-// MARK: - CharactersResponse -
-
-struct CharactersResponse: Codable {
-    let code: Int?
+struct ComicsResponse: Codable {
     let copyright: String?
-    let attributionText: String?
-    let attributionHTML: String?
-    let etag: String?
-    let data: CharactersResponseData
+    let attributionText: String
+    let attributionHTML: String
+    let etag: String
+    let data: ComicsResponseData
 
     enum CodingKeys: String, CodingKey {
-        case code = "code"
         case copyright = "copyright"
         case attributionText = "attributionText"
         case attributionHTML = "attributionHTML"
@@ -29,14 +26,14 @@ struct CharactersResponse: Codable {
     }
 }
 
-// MARK: - CharactersResponseData -
+// MARK: - ComicsResponseData -
 
-struct CharactersResponseData: Codable {
+struct ComicsResponseData: Codable {
     let offset: Int
     let limit: Int
     let total: Int
     let count: Int
-    let results: [CharacterData]?
+    let results: [ComicData]
 
     enum CodingKeys: String, CodingKey {
         case offset = "offset"
@@ -47,32 +44,32 @@ struct CharactersResponseData: Codable {
     }
 }
 
-// MARK: - CharacterData -
+// MARK: - ComicData -
 
-struct CharacterData: Codable {
+struct ComicData: Codable {
     let id: Int
-    let name: String
+    let digitalID: Int
+    let title: String
+    let variantDescription: String?
     let resultDescription: String?
     let modified: String
+    let format: String
+    let pageCount: Int
+    let resourceURI: String
     let thumbnail: Thumbnail
+    let images: [Thumbnail]
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
-        case name = "name"
+        case digitalID = "digitalId"
+        case title = "title"
+        case variantDescription = "variantDescription"
         case resultDescription = "description"
         case modified = "modified"
+        case format = "format"
+        case pageCount = "pageCount"
+        case resourceURI = "resourceURI"
         case thumbnail = "thumbnail"
-    }
-}
-
-// MARK: - Thumbnail -
-
-struct Thumbnail: Codable {
-    let path: String
-    let thumbnailExtension: String
-
-    enum CodingKeys: String, CodingKey {
-        case path = "path"
-        case thumbnailExtension = "extension"
+        case images = "images"
     }
 }

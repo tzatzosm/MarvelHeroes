@@ -11,6 +11,7 @@ import Alamofire
 enum MarvelAPIServiceRouter: URLRequestConvertible {
 
     case characters(nameStartsWith: String?, order: String, offset: Int, limit: Int)
+    case comics(characterIds: [Int])
 
     var version: String {
         return "v1"
@@ -20,6 +21,8 @@ enum MarvelAPIServiceRouter: URLRequestConvertible {
         switch self {
         case .characters:
             return "public/characters"
+        case .comics:
+            return "public/comics"
         }
     }
 
@@ -44,15 +47,17 @@ enum MarvelAPIServiceRouter: URLRequestConvertible {
                 queryItems.append(URLQueryItem(name: "nameStartsWith", value: nameStartsWith))
             }
             return queryItems
+        case let .comics(characterIds):
+            let characterIds = characterIds.map { "\($0)" }.joined(separator: ",")
+            return [URLQueryItem(name: "characters", value: characterIds)]
         }
     }
 
     var httpMethod: HTTPMethod {
         switch self {
-        case .characters:
+        case .characters, .comics:
             return .get
         }
-
     }
 
     var url: String {

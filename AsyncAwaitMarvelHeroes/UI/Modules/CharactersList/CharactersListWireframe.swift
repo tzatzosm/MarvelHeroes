@@ -31,6 +31,6 @@ final class CharactersListWireframe: BaseWireframe<CharactersListViewController>
 
 extension CharactersListWireframe: CharactersListWireframeInterface {
     func navigateToCharacterDetails(character: CharacterData) {
-        // TODO: Navigate to character details wireframe
+        navigationController?.pushWireframe(CharacterDetailsWireframe(character: character))
     }
 }
