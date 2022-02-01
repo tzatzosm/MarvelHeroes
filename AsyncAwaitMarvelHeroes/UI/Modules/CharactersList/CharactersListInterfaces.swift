@@ -17,6 +17,8 @@ protocol CharactersListWireframeInterface: WireframeInterface {
 protocol CharactersListViewInterface: ViewInterface {
     @MainActor func clearResults()
     @MainActor func showResults(sections: [CharactersListViewModel.Section])
+    @MainActor func clearError()
+    @MainActor func showError(errorMessage: String)
 }
 
 protocol CharactersListPresenterInterface: PresenterInterface {

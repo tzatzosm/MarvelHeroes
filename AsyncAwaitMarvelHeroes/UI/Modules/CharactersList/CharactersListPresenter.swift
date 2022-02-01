@@ -9,6 +9,7 @@
 //
 
 import Foundation
+import Alamofire
 
 final class CharactersListPresenter {
 
@@ -42,7 +43,10 @@ extension CharactersListPresenter: CharactersListPresenterInterface {
     func search(for searchTerm: String?) async {
         self.searchTerm = searchTerm
         self.resetState()
+        await view.clearError()
         await self.view.showResults(sections: self.constructSections())
+        // Makes UI look nicer :)
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
         await self.performSearch()
     }
 
@@ -62,7 +66,7 @@ extension CharactersListPresenter: CharactersListPresenterInterface {
 
 private extension CharactersListPresenter {
 
-    private func resetState() {
+    func resetState() {
         hasNextPage = false
         isLoading = false
         characters.removeAll()
@@ -89,10 +93,31 @@ private extension CharactersListPresenter {
             self.characters.append(contentsOf: responseData.results ?? [])
             self.hasNextPage = responseData.total > self.characters.count
             await self.view.showResults(sections: self.constructSections())
+        } catch AFError.explicitlyCancelled {
+            // Mute explicitly cancelled error
         } catch {
-            resetState()
-            print("error \(error)")
+            if characters.isEmpty {
+                await view.clearResults()
+            }
+            let errorMessage = getMessageForError(error)
+            await view.showError(errorMessage: errorMessage)
         }
+    }
+
+    func getMessageForError(_ error: Error) -> String {
+        var errorMessage = "An unexpected error occurred."
+        switch error {
+        case let error as NSError:
+            switch (error.domain, error.code) {
+            case ("Alamofire.AFError", 13):
+                errorMessage = "Your internet connection appears to be offline. Please check your network settings."
+            default:
+                break
+            }
+        default:
+            break
+        }
+        return errorMessage
     }
 
 }

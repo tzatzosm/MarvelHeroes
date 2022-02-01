@@ -183,4 +183,41 @@ extension CharactersListViewController: CharactersListViewInterface {
         }
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
+
+    func clearError() {
+        self.collectionView.backgroundView = nil
+    }
+
+    func showError(errorMessage: String) {
+        let errorView = UIView()
+
+        let label = UILabel()
+        label.text = errorMessage
+        label.numberOfLines = 0
+        label.textAlignment = .center
+
+        var buttonConfiguration = UIButton.Configuration.plain()
+        buttonConfiguration.title = "Retry"
+        let action = UIAction { action in
+            Task.detached {
+                await self.presenter.search(for: nil)
+            }
+        }
+        let retryButton = UIButton(configuration: buttonConfiguration, primaryAction: action)
+        [label, retryButton].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            errorView.addSubview($0)
+        }
+        NSLayoutConstraint.activate([
+            label.bottomAnchor.constraint(equalTo: errorView.centerYAnchor, constant: -4),
+            label.centerXAnchor.constraint(equalTo: errorView.centerXAnchor),
+            label.leadingAnchor.constraint(greaterThanOrEqualTo: errorView.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(lessThanOrEqualTo: errorView.trailingAnchor, constant: -16),
+
+            retryButton.topAnchor.constraint(equalTo: errorView.centerYAnchor, constant: 4),
+            retryButton.centerXAnchor.constraint(equalTo: errorView.centerXAnchor),
+        ])
+        self.collectionView.backgroundView = errorView
+    }
+
 }
